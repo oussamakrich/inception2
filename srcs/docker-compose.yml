@@ -1,27 +1,27 @@
 version: '3.8'
 services:
-  # nginx:
-  #   build: ./requirements/nginx/
-  #   image: nginx:my
-  #   container_name: nginx
-    # restart : always
-    # depends_on:
-      # - wordpress
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     -  '443:443'
-  #   volumes:
-  #     - Vwordpress:/srv/www
-  #   networks:
-      # - MyNet
+  nginx:
+    build: ./requirements/nginx/
+    image: nginx:my
+    container_name: nginx
+    restart : on-failure
+    depends_on:
+      - wordpress
+    env_file:
+      - .env
+    ports:
+      -  '443:443'
+    volumes:
+      - Vwordpress:/srv/www
+    networks:
+      - MyNet
   
   
   wordpress:
     build: ./requirements/wordpress
     image: wordpress:my
     container_name: wordpress
-    # restart : always
+    restart : on-failure
     depends_on:
       - mariadb
     env_file:
@@ -35,7 +35,7 @@ services:
       build: ./requirements/mariadb/
       image: mariadb:my
       container_name: mariadb
-      # restart: always
+      restart : on-failure
       env_file:
         - .env
       volumes:
@@ -46,7 +46,6 @@ services:
 volumes:
   Vmariadb:
     name: mariadb_vol
-    # driver: local
     driver_opts:
       type: none
       o: bind
@@ -54,7 +53,6 @@ volumes:
   
   Vwordpress:
     name: wordpress_vol
-    # driver: local
     driver_opts:
       type: none
       o: bind

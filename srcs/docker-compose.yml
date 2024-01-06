@@ -1,0 +1,66 @@
+version: '3.8'
+services:
+  # nginx:
+  #   build: ./requirements/nginx/
+  #   image: nginx:my
+  #   container_name: nginx
+    # restart : always
+    # depends_on:
+      # - wordpress
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     -  '443:443'
+  #   volumes:
+  #     - Vwordpress:/srv/www
+  #   networks:
+      # - MyNet
+  
+  
+  wordpress:
+    build: ./requirements/wordpress
+    image: wordpress:my
+    container_name: wordpress
+    # restart : always
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    volumes:
+      - Vwordpress:/srv/www
+    networks:
+      - MyNet
+
+  mariadb:
+      build: ./requirements/mariadb/
+      image: mariadb:my
+      container_name: mariadb
+      # restart: always
+      env_file:
+        - .env
+      volumes:
+        - Vmariadb:/var/lib/mysql
+      networks:
+        - MyNet
+
+volumes:
+  Vmariadb:
+    name: mariadb_vol
+    # driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/okrich/data/mariadb
+  
+  Vwordpress:
+    name: wordpress_vol
+    # driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/okrich/data/www
+
+
+networks:
+  MyNet:
+    name: mynet
